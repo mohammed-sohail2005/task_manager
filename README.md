@@ -35,40 +35,55 @@ An interactive, cryptographically secure password generator web application buil
 
 ---
 
-## 🚀 How to Run Locally
-
-Since this app is built with pure web technologies, no build tools, Node.js, or package managers are required!
-
-### Method 1: Direct File Open
-1. Clone or download this repository to your local computer.
-2. Double-click `index.html` or right-click and choose **Open with Browser** (Chrome, Firefox, Edge, Safari).
-
-### Method 2: Local HTTP Server (Recommended)
-Using a local server ensures optimal Clipboard API support and smooth performance:
-
-#### Using VS Code Live Server:
-1. Open the project folder in VS Code.
-2. Install the **Live Server** extension (if not already installed).
-3. Right-click `index.html` and click **"Open with Live Server"**.
-
-#### Using Python HTTP Server:
-Run one of the following commands in your terminal inside the project directory:
-
-```bash
-# Python 3
-python -m http.server 8000
-```
-Then navigate to `http://localhost:8000` in your web browser.
-
----
-
 ## 📁 File Structure
 
 ```
 ├── index.html        # Main HTML layout & structural markup
 ├── style.css         # Glassmorphism theme, 3D CSS effects & responsive design
 ├── script.js        # Core generator logic, 3D card tilt, strength meter & toast
-└── README.md         # Project documentation & instructions
+├── vercel.json       # Vercel deployment configuration
+├── package.json      # Project metadata & npm configuration
+├── .gitignore        # Files excluded from Git tracking
+└── README.md         # Project documentation & setup instructions
+```
+
+---
+
+## 🐙 How to Push to GitHub
+
+1. Create a new repository on [GitHub](https://github.com/new) (e.g., `passvault-3d`).
+2. Run the following commands in your terminal:
+
+```bash
+# Rename default branch to main
+git branch -M main
+
+# Add your GitHub remote URL
+git remote add origin https://github.com/YOUR_USERNAME/passvault-3d.git
+
+# Push code to GitHub
+git push -u origin main
+```
+
+---
+
+## 🚀 How to Deploy on Vercel
+
+### Option 1: Automatic Deployment via GitHub (Recommended)
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** $\rightarrow$ **"Project"**.
+2. Import your GitHub repository (`passvault-3d`).
+3. Vercel will automatically detect the static project configuration from `vercel.json` and `index.html`.
+4. Click **"Deploy"**. Your site will be live instantly with an SSL certificate!
+
+### Option 2: Deploy via Vercel CLI
+Run the following commands in your terminal:
+
+```bash
+# Install Vercel CLI globally (if not already installed)
+npm i -g vercel
+
+# Deploy project directly
+vercel
 ```
 
 ---
