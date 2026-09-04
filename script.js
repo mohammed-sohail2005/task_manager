@@ -1,278 +1,235 @@
 /* ==========================================================================
-   PassVault 3D - Modern JavaScript Logic
+   TaskPulse 3D - Modern JavaScript Logic
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- LocalStorage Key ---
+    const STORAGE_KEY = 'taskpulse_tasks_v1';
+
     // --- DOM Elements ---
     const glassCard = document.getElementById('glassCard');
-    const passwordDisplay = document.getElementById('passwordDisplay');
-    const passwordBox = document.getElementById('passwordBox');
-    const copyBtn = document.getElementById('copyBtn');
-    const refreshBtn = document.getElementById('refreshBtn');
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const emptyState = document.getElementById('emptyState');
     
-    const lengthSlider = document.getElementById('lengthSlider');
-    const lengthValueDisplay = document.getElementById('lengthValueDisplay');
-    const sliderTooltip = document.getElementById('sliderTooltip');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const clearCompletedBtn = document.getElementById('clearCompletedBtn');
 
-    const uppercaseToggle = document.getElementById('uppercaseToggle');
-    const lowercaseToggle = document.getElementById('lowercaseToggle');
-    const numbersToggle = document.getElementById('numbersToggle');
-    const symbolsToggle = document.getElementById('symbolsToggle');
-    const validationWarning = document.getElementById('validationWarning');
+    const progressRingCircle = document.getElementById('progressRingCircle');
+    const progressPercentage = document.getElementById('progressPercentage');
 
-    const strengthText = document.getElementById('strengthText');
-    const strengthBar = document.getElementById('strengthBar');
+    const countAll = document.getElementById('countAll');
+    const countActive = document.getElementById('countActive');
+    const countCompleted = document.getElementById('countCompleted');
+    const taskStatsSummary = document.getElementById('taskStatsSummary');
+    const currentDate = document.getElementById('currentDate');
 
-    const generateBtn = document.getElementById('generateBtn');
-    const toast = document.getElementById('toast');
+    // --- Initial State ---
+    let tasks = loadTasksFromStorage();
+    let currentFilter = 'all';
 
-    // --- Character Sets ---
-    const CHAR_SETS = {
-        uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-        lowercase: 'abcdefghijklmnopqrstuvwxyz',
-        numbers: '0123456789',
-        symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
-    };
-
-    let currentPassword = '';
-    let isScrambling = false;
-    let toastTimeout = null;
-
-    // --- Cryptographically Secure Random Utilities ---
-    function getRandomInt(max) {
-        const randomBuffer = new Uint32Array(1);
-        window.crypto.getRandomValues(randomBuffer);
-        return randomBuffer[0] % max;
+    // Default demo tasks if first time user
+    if (tasks.length === 0 && !localStorage.getItem('taskpulse_has_visited')) {
+        tasks = [
+            { id: '1', text: 'Welcome to TaskPulse 3D! 🚀', completed: false, createdAt: Date.now() },
+            { id: '2', text: 'Click the checkmark to complete a task', completed: true, createdAt: Date.now() - 1000 },
+            { id: '3', text: 'Hover over task cards to feel the 3D elevation', completed: false, createdAt: Date.now() - 2000 }
+        ];
+        localStorage.setItem('taskpulse_has_visited', 'true');
+        saveTasksToStorage();
     }
 
-    function getRandomChar(charString) {
-        return charString[getRandomInt(charString.length)];
+    // --- Date Display ---
+    function initDateDisplay() {
+        const options = { weekday: 'short', month: 'short', day: 'numeric' };
+        const today = new Date().toLocaleDateString('en-US', options);
+        currentDate.textContent = `${today} • Daily Focus`;
     }
 
-    // Fisher-Yates Secure Shuffle
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = getRandomInt(i + 1);
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    // --- Password Generator Core ---
-    function generatePassword() {
-        if (!validateOptions()) return;
-
-        const length = parseInt(lengthSlider.value, 10);
-        const selectedPools = [];
-        const guaranteedChars = [];
-
-        if (uppercaseToggle.checked) {
-            selectedPools.push(CHAR_SETS.uppercase);
-            guaranteedChars.push(getRandomChar(CHAR_SETS.uppercase));
-        }
-        if (lowercaseToggle.checked) {
-            selectedPools.push(CHAR_SETS.lowercase);
-            guaranteedChars.push(getRandomChar(CHAR_SETS.lowercase));
-        }
-        if (numbersToggle.checked) {
-            selectedPools.push(CHAR_SETS.numbers);
-            guaranteedChars.push(getRandomChar(CHAR_SETS.numbers));
-        }
-        if (symbolsToggle.checked) {
-            selectedPools.push(CHAR_SETS.symbols);
-            guaranteedChars.push(getRandomChar(CHAR_SETS.symbols));
-        }
-
-        const combinedPool = selectedPools.join('');
-        const remainingLength = length - guaranteedChars.length;
-        const randomChars = [];
-
-        for (let i = 0; i < remainingLength; i++) {
-            randomChars.push(getRandomChar(combinedPool));
-        }
-
-        const passwordArray = shuffleArray([...guaranteedChars, ...randomChars]);
-        currentPassword = passwordArray.join('');
-
-        // Trigger Matrix Scramble Reveal Animation
-        scrambleAnimatePassword(currentPassword);
-        updateStrengthMeter();
-    }
-
-    // --- Matrix / Typewriter Character Scramble Animation ---
-    function scrambleAnimatePassword(finalPassword) {
-        if (isScrambling) return;
-        isScrambling = true;
-        passwordDisplay.classList.add('scrambling');
-
-        const allPossibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-        const iterations = 8;
-        let step = 0;
-
-        const interval = setInterval(() => {
-            let displayed = '';
-            for (let i = 0; i < finalPassword.length; i++) {
-                if (i < Math.floor((step / iterations) * finalPassword.length)) {
-                    displayed += finalPassword[i];
-                } else {
-                    displayed += getRandomChar(allPossibleChars);
-                }
-            }
-
-            passwordDisplay.textContent = displayed;
-            step++;
-
-            if (step > iterations) {
-                clearInterval(interval);
-                passwordDisplay.textContent = finalPassword;
-                passwordDisplay.classList.remove('scrambling');
-                isScrambling = false;
-            }
-        }, 35);
-    }
-
-    // --- Option Validation ---
-    function validateOptions() {
-        const anyChecked = uppercaseToggle.checked || lowercaseToggle.checked || numbersToggle.checked || symbolsToggle.checked;
-
-        if (!anyChecked) {
-            validationWarning.classList.remove('hidden');
-            generateBtn.disabled = true;
-            refreshBtn.disabled = true;
-            copyBtn.disabled = true;
-            passwordDisplay.textContent = 'Select at least 1 option';
-            passwordDisplay.style.fontSize = '1rem';
-            passwordDisplay.style.color = '#ff6b7a';
-            updateStrengthMeter(0, 'Invalid');
-            return false;
-        } else {
-            validationWarning.classList.add('hidden');
-            generateBtn.disabled = false;
-            refreshBtn.disabled = false;
-            copyBtn.disabled = false;
-            passwordDisplay.style.fontSize = '';
-            passwordDisplay.style.color = '';
-            return true;
-        }
-    }
-
-    // --- Password Strength & Entropy Calculator ---
-    function updateStrengthMeter(forcePct = null, forceText = null) {
-        if (forcePct !== null) {
-            strengthBar.style.width = `${forcePct}%`;
-            strengthBar.style.backgroundColor = 'var(--text-subtle)';
-            strengthBar.style.boxShadow = 'none';
-            strengthText.textContent = forceText || '';
-            strengthText.style.color = 'var(--text-subtle)';
-            return;
-        }
-
-        const length = parseInt(lengthSlider.value, 10);
-        let poolSize = 0;
-
-        if (uppercaseToggle.checked) poolSize += 26;
-        if (lowercaseToggle.checked) poolSize += 26;
-        if (numbersToggle.checked) poolSize += 10;
-        if (symbolsToggle.checked) poolSize += 32;
-
-        if (poolSize === 0) return;
-
-        // Information entropy calculation E = L * log2(R)
-        const entropy = length * Math.log2(poolSize);
-
-        let percentage = 0;
-        let label = 'Weak';
-        let color = 'var(--strength-weak)';
-
-        if (entropy < 35 || length < 7) {
-            percentage = 25;
-            label = 'Weak';
-            color = 'var(--strength-weak)';
-        } else if (entropy < 60 || length < 10) {
-            percentage = 50;
-            label = 'Medium';
-            color = 'var(--strength-medium)';
-        } else if (entropy < 85 || length < 14) {
-            percentage = 75;
-            label = 'Strong';
-            color = 'var(--strength-strong)';
-        } else {
-            percentage = 100;
-            label = 'Very Secure';
-            color = 'var(--strength-secure)';
-        }
-
-        strengthBar.style.width = `${percentage}%`;
-        strengthBar.style.backgroundColor = color;
-        strengthBar.style.boxShadow = `0 0 12px ${color}`;
-        strengthText.textContent = label;
-        strengthText.style.color = color;
-    }
-
-    // --- Custom Range Slider & Tooltip Synchronization ---
-    function updateSliderUI() {
-        const min = parseInt(lengthSlider.min, 10);
-        const max = parseInt(lengthSlider.max, 10);
-        const val = parseInt(lengthSlider.value, 10);
-
-        const percentage = ((val - min) / (max - min)) * 100;
-        lengthSlider.style.setProperty('--slider-pct', `${percentage}%`);
-
-        lengthValueDisplay.textContent = val;
-        sliderTooltip.textContent = val;
-
-        // Position tooltip bubble dynamically relative to thumb
-        const thumbOffset = (12 - percentage * 0.24);
-        sliderTooltip.style.left = `calc(${percentage}% + ${thumbOffset}px)`;
-    }
-
-    // --- Copy to Clipboard & Toast ---
-    async function copyToClipboard() {
-        if (!currentPassword || generateBtn.disabled) return;
-
+    // --- LocalStorage Helpers ---
+    function loadTasksFromStorage() {
         try {
-            await navigator.clipboard.writeText(currentPassword);
-            showToast();
-            triggerCopyIconFeedback();
-        } catch (err) {
-            // Fallback for older browsers
-            const tempInput = document.createElement('input');
-            tempInput.value = currentPassword;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showToast();
-            triggerCopyIconFeedback();
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+            console.error('Failed to load tasks from localStorage', e);
+            return [];
         }
     }
 
-    function triggerCopyIconFeedback() {
-        const copyIcon = copyBtn.querySelector('.copy-icon');
-        const checkIcon = copyBtn.querySelector('.check-icon');
+    function saveTasksToStorage() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        } catch (e) {
+            console.error('Failed to save tasks to localStorage', e);
+        }
+    }
 
-        copyBtn.classList.add('copied');
-        copyIcon.classList.add('hidden');
-        checkIcon.classList.remove('hidden');
+    // --- Task Rendering Engine ---
+    function renderTasks() {
+        taskList.innerHTML = '';
+
+        const filteredTasks = tasks.filter(task => {
+            if (currentFilter === 'active') return !task.completed;
+            if (currentFilter === 'completed') return task.completed;
+            return true; // 'all'
+        });
+
+        if (filteredTasks.length === 0) {
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            filteredTasks.forEach(task => {
+                const taskElement = createTaskDOMElement(task);
+                taskList.appendChild(taskElement);
+            });
+        }
+
+        updateStatsAndProgress();
+    }
+
+    // --- Create Task Item DOM Element ---
+    function createTaskDOMElement(task) {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        li.dataset.id = task.id;
+
+        li.innerHTML = `
+            <div class="task-left">
+                <div class="custom-checkbox" role="checkbox" aria-checked="${task.completed}" tabindex="0" title="Toggle task completion">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span class="task-text"></span>
+            </div>
+            <button class="delete-btn" title="Delete task" aria-label="Delete task">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+            </button>
+        `;
+
+        // Safely insert text content to prevent XSS
+        li.querySelector('.task-text').textContent = task.text;
+
+        // Toggle Checkbox Event Listener
+        const checkbox = li.querySelector('.custom-checkbox');
+        checkbox.addEventListener('click', () => toggleTask(task.id));
+        checkbox.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleTask(task.id);
+            }
+        });
+
+        // Delete Button Event Listener
+        const deleteBtn = li.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => deleteTask(task.id, li));
+
+        return li;
+    }
+
+    // --- Task Actions ---
+    function addTask(text) {
+        const trimmedText = text.trim();
+        if (!trimmedText) return;
+
+        const newTask = {
+            id: Date.now().toString(),
+            text: trimmedText,
+            completed: false,
+            createdAt: Date.now()
+        };
+
+        tasks.unshift(newTask);
+        saveTasksToStorage();
+
+        // Render with entry animation
+        renderTasks();
+
+        taskInput.value = '';
+        taskInput.focus();
+    }
+
+    function toggleTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+
+        task.completed = !task.completed;
+        saveTasksToStorage();
+
+        const taskItem = taskList.querySelector(`[data-id="${id}"]`);
+        if (taskItem) {
+            taskItem.classList.toggle('completed', task.completed);
+            const checkbox = taskItem.querySelector('.custom-checkbox');
+            checkbox.setAttribute('aria-checked', task.completed);
+        }
+
+        // Re-render if in active or completed filter view to maintain filter integrity
+        if (currentFilter !== 'all') {
+            setTimeout(renderTasks, 200);
+        } else {
+            updateStatsAndProgress();
+        }
+    }
+
+    function deleteTask(id, element) {
+        // Trigger 3D slide-out exit animation
+        if (element) {
+            element.classList.add('deleting');
+            setTimeout(() => {
+                tasks = tasks.filter(t => t.id !== id);
+                saveTasksToStorage();
+                renderTasks();
+            }, 320);
+        } else {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasksToStorage();
+            renderTasks();
+        }
+    }
+
+    function clearCompleted() {
+        const completedElements = taskList.querySelectorAll('.task-item.completed');
+        
+        if (completedElements.length === 0) return;
+
+        completedElements.forEach(el => el.classList.add('deleting'));
 
         setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            copyIcon.classList.remove('hidden');
-            checkIcon.classList.add('hidden');
-        }, 2000);
+            tasks = tasks.filter(t => !t.completed);
+            saveTasksToStorage();
+            renderTasks();
+        }, 320);
     }
 
-    function showToast() {
-        if (toastTimeout) clearTimeout(toastTimeout);
+    // --- Stats & 3D Progress Ring Calculation ---
+    function updateStatsAndProgress() {
+        const total = tasks.length;
+        const completed = tasks.filter(t => t.completed).length;
+        const active = total - completed;
 
-        toast.classList.remove('show');
-        // Trigger reflow to restart CSS animation
-        void toast.offsetWidth;
-        toast.classList.add('show');
+        // Update Counter Badges
+        countAll.textContent = total;
+        countActive.textContent = active;
+        countCompleted.textContent = completed;
 
-        toastTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-        }, 2500);
+        // Footer Text
+        taskStatsSummary.textContent = `${active} task${active === 1 ? '' : 's'} remaining`;
+
+        // Progress Percentage
+        const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+        progressPercentage.textContent = `${percentage}%`;
+
+        // SVG Ring Dashoffset Calculation (r = 28, circumference = 2 * PI * 28 = 175.929)
+        const circumference = 175.929;
+        const offset = circumference - (percentage / 100) * circumference;
+        progressRingCircle.style.strokeDashoffset = offset;
     }
 
     // --- 3D Glass Card Tilt Effect ---
@@ -289,23 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const mouseX = e.clientX;
             const mouseY = e.clientY;
 
-            // Check if cursor is near card
             const cardCenterX = bounds.left + bounds.width / 2;
             const cardCenterY = bounds.top + bounds.height / 2;
 
             const deltaX = (mouseX - cardCenterX) / (window.innerWidth / 2);
             const deltaY = (mouseY - cardCenterY) / (window.innerHeight / 2);
 
-            const rotateX = (-deltaY * 12).toFixed(2);
-            const rotateY = (deltaX * 12).toFixed(2);
+            const rotateX = (-deltaY * 10).toFixed(2);
+            const rotateY = (deltaX * 10).toFixed(2);
 
             glassCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-            // Card shine radial gradient positioning
-            const shineX = ((mouseX - bounds.left) / bounds.width) * 100;
-            const shineY = ((mouseY - bounds.top) / bounds.height) * 100;
-            glassCard.style.setProperty('--mouse-x', `${shineX}%`);
-            glassCard.style.setProperty('--mouse-y', `${shineY}%`);
         });
 
         window.addEventListener('resize', updateBounds);
@@ -314,52 +264,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Ripple Click Effect ---
-    function createRipple(e) {
-        const button = e.currentTarget;
-        const rect = button.getBoundingClientRect();
-        const circle = document.createElement('span');
-        const diameter = Math.max(rect.width, rect.height);
-        const radius = diameter / 2;
-
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${e.clientX - rect.left - radius}px`;
-        circle.style.top = `${e.clientY - rect.top - radius}px`;
-        circle.classList.add('ripple');
-
-        const existingRipple = button.querySelector('.ripple');
-        if (existingRipple) existingRipple.remove();
-
-        button.appendChild(circle);
-    }
-
     // --- Event Listeners ---
-    lengthSlider.addEventListener('input', () => {
-        updateSliderUI();
-        if (validateOptions()) {
-            updateStrengthMeter();
-            generatePassword();
-        }
+    taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        addTask(taskInput.value);
     });
 
-    [uppercaseToggle, lowercaseToggle, numbersToggle, symbolsToggle].forEach(toggle => {
-        toggle.addEventListener('change', () => {
-            if (validateOptions()) {
-                generatePassword();
-            }
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            renderTasks();
         });
     });
 
-    generateBtn.addEventListener('click', (e) => {
-        createRipple(e);
-        generatePassword();
-    });
+    clearCompletedBtn.addEventListener('click', clearCompleted);
 
-    refreshBtn.addEventListener('click', generatePassword);
-    copyBtn.addEventListener('click', copyToClipboard);
-
-    // Initial Setup
-    updateSliderUI();
+    // --- Initialize App ---
+    initDateDisplay();
     init3DTilt();
-    generatePassword();
+    renderTasks();
 });
