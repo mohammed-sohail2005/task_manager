@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Glassmorphism Password Generator</title>
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Animated Gradient & Orbs -->
+    <div class="bg-gradient-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Main Container with 3D Perspective -->
+    <main class="perspective-container">
+        <!-- 3D Floating Glassmorphism Card -->
+        <div class="glass-card" id="glassCard">
+            <!-- Subtle Card Shine Highlight -->
+            <div class="card-shine"></div>
+
+            <!-- Header -->
+            <header class="card-header">
+                <div class="header-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>PassVault 3D</h1>
+                    <p>Cryptographically secure password generator</p>
+                </div>
+            </header>
+
+            <!-- Password Display Box -->
+            <section class="password-box-wrapper">
+                <div class="password-box" id="passwordBox">
+                    <span class="password-display" id="passwordDisplay" aria-live="polite">Click Generate</span>
+                    <div class="password-actions">
+                        <button class="icon-btn" id="refreshBtn" title="Re-generate Password" aria-label="Re-generate Password">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2v6h-6"></path>
+                                <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-btn copy-btn" id="copyBtn" title="Copy to Clipboard" aria-label="Copy to Clipboard">
+                            <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <svg class="check-icon hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Password Length Slider Section -->
+            <section class="control-group">
+                <div class="label-row">
+                    <label for="lengthSlider">Password Length</label>
+                    <span class="length-number" id="lengthValueDisplay">16</span>
+                </div>
+                <div class="slider-wrapper">
+                    <!-- Floating Tooltip -->
+                    <div class="slider-tooltip" id="sliderTooltip">16</div>
+                    <input type="range" id="lengthSlider" min="4" max="32" value="16" step="1" aria-label="Password Length Slider">
+                </div>
+            </section>
+
+            <!-- Options Grid (Checkboxes as 3D Toggles) -->
+            <section class="options-container">
+                <h2 class="options-title">Character Types</h2>
+                <div class="options-grid">
+                    <!-- Uppercase -->
+                    <label class="toggle-card">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Uppercase</span>
+                            <span class="toggle-hint">A-Z</span>
+                        </div>
+                        <input type="checkbox" id="uppercaseToggle" checked>
+                        <span class="toggle-switch">
+                            <span class="toggle-knob"></span>
+                        </span>
+                    </label>
+
+                    <!-- Lowercase -->
+                    <label class="toggle-card">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Lowercase</span>
+                            <span class="toggle-hint">a-z</span>
+                        </div>
+                        <input type="checkbox" id="lowercaseToggle" checked>
+                        <span class="toggle-switch">
+                            <span class="toggle-knob"></span>
+                        </span>
+                    </label>
+
+                    <!-- Numbers -->
+                    <label class="toggle-card">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Numbers</span>
+                            <span class="toggle-hint">0-9</span>
+                        </div>
+                        <input type="checkbox" id="numbersToggle" checked>
+                        <span class="toggle-switch">
+                            <span class="toggle-knob"></span>
+                        </span>
+                    </label>
+
+                    <!-- Symbols -->
+                    <label class="toggle-card">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Symbols</span>
+                            <span class="toggle-hint">!@#$%^&amp;*</span>
+                        </div>
+                        <input type="checkbox" id="symbolsToggle" checked>
+                        <span class="toggle-switch">
+                            <span class="toggle-knob"></span>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Validation Warning Message -->
+                <div class="validation-warning hidden" id="validationWarning">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Please select at least one character type!
+                </div>
+            </section>
+
+            <!-- Password Strength Section -->
+            <section class="strength-section">
+                <div class="strength-header">
+                    <span class="strength-title">Password Strength</span>
+                    <span class="strength-text" id="strengthText">Strong</span>
+                </div>
+                <div class="strength-bar-bg">
+                    <div class="strength-bar-fill" id="strengthBar"></div>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <button class="generate-btn" id="generateBtn">
+                <span class="btn-text">Generate Password</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="status">
+        <div class="toast-content">
+            <div class="toast-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <span class="toast-message">Password copied to clipboard!</span>
+        </div>
+        <div class="toast-progress" id="toastProgress"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

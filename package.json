@@ -1,0 +1,19 @@
+{
+  "name": "passvault-3d-password-generator",
+  "version": "1.0.0",
+  "description": "Cryptographically secure 3D glassmorphism password generator web app built with Vanilla HTML, CSS, and JS.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "password-generator",
+    "glassmorphism",
+    "3d",
+    "vanilla-js",
+    "security",
+    "crypto"
+  ],
+  "author": "",
+  "license": "MIT"
+}
