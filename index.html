@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskPulse Pro 3D - Executive Task Manager</title>
+    <title>TaskPulse OS - Executive Task Dashboard</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,176 +19,292 @@
         <div class="grid-overlay"></div>
     </div>
 
-    <!-- Main Container -->
-    <main class="app-container">
-        <!-- 3D Glassmorphism Executive Card -->
-        <div class="glass-card" id="glassCard">
-            <!-- Glass Sheen Overlay -->
-            <div class="card-shine"></div>
-
-            <!-- Header & Dashboard Stats -->
-            <header class="dashboard-header">
-                <div class="header-left">
-                    <div class="app-logo">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                            <path d="m9 12 2 2 4-4"></path>
-                        </svg>
-                    </div>
-                    <div class="header-text">
-                        <div class="title-row">
-                            <h1>TaskPulse Pro</h1>
-                            <span class="pro-badge">PRO</span>
-                        </div>
-                        <p id="currentDate">Executive Focus & Task Suite</p>
-                    </div>
-                </div>
-
-                <!-- 3D Progress Ring Widget -->
-                <div class="progress-ring-container">
-                    <svg class="progress-ring" width="76" height="76" viewBox="0 0 76 76">
-                        <circle class="progress-ring-bg" cx="38" cy="38" r="30" stroke-width="6" fill="transparent" />
-                        <circle class="progress-ring-circle" id="progressRingCircle" cx="38" cy="38" r="30" stroke-width="6" fill="transparent" />
+    <!-- Dashboard App Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-panel">
+            <div class="sidebar-header">
+                <div class="app-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m9 12 2 2 4-4"></path>
                     </svg>
-                    <div class="progress-text-box">
-                        <span class="progress-percentage" id="progressPercentage">0%</span>
-                        <span class="progress-label">DONE</span>
+                </div>
+                <div class="brand-text">
+                    <h2>TaskPulse OS</h2>
+                    <span class="version-tag">PRO v3.0</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">VIEWS</div>
+                <button class="nav-item active" data-nav="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Dashboard</span>
+                    <span class="nav-badge" id="navCountAll">0</span>
+                </button>
+                <button class="nav-item" data-nav="high">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                    <span>High Priority</span>
+                    <span class="nav-badge red" id="navCountHigh">0</span>
+                </button>
+                <button class="nav-item" data-nav="work">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Work & Projects</span>
+                    <span class="nav-badge purple" id="navCountWork">0</span>
+                </button>
+                <button class="nav-item" data-nav="personal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Personal Focus</span>
+                    <span class="nav-badge cyan" id="navCountPersonal">0</span>
+                </button>
+                <button class="nav-item" data-nav="completed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <span>Completed Archive</span>
+                    <span class="nav-badge green" id="navCountCompleted">0</span>
+                </button>
+            </nav>
+
+            <!-- Sidebar Footer Status -->
+            <div class="sidebar-footer">
+                <div class="status-card">
+                    <div class="status-indicator"></div>
+                    <div class="status-info">
+                        <span class="status-title">System Status</span>
+                        <span class="status-sub">LocalStorage Synced</span>
                     </div>
                 </div>
-            </header>
+            </div>
+        </aside>
 
-            <!-- Productivity Metrics Bar -->
-            <section class="metrics-bar">
-                <div class="metric-card">
-                    <span class="metric-label">Total Tasks</span>
-                    <span class="metric-value" id="metricTotal">0</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">Pending</span>
-                    <span class="metric-value yellow" id="metricPending">0</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">High Priority</span>
-                    <span class="metric-value red" id="metricHigh">0</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">Completed</span>
-                    <span class="metric-value green" id="metricCompleted">0</span>
-                </div>
-            </section>
+        <!-- Main Dashboard Panel -->
+        <main class="main-panel">
+            <!-- Glassmorphism Container Card -->
+            <div class="glass-card" id="glassCard">
+                <div class="card-shine"></div>
 
-            <!-- Task Input Form & Priority Selection -->
-            <section class="task-input-section">
-                <form id="taskForm" class="input-form">
-                    <div class="input-row">
-                        <div class="input-field-container">
-                            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="16"></line>
-                                <line x1="8" y1="12" x2="16" y2="12"></line>
-                            </svg>
-                            <input type="text" id="taskInput" placeholder="Add a new executive task..." autocomplete="off" maxlength="140" required>
+                <!-- Hero Header Banner -->
+                <header class="dashboard-hero">
+                    <div class="hero-left">
+                        <div class="greeting-box">
+                            <h1 id="greetingHeading">Executive Dashboard</h1>
+                            <p id="currentDate">Managing enterprise focus & deliverables</p>
                         </div>
-                        <button type="submit" class="add-btn" id="addBtn">
-                            <span>Add Task</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </div>
+
+                    <!-- Productivity Score Ring -->
+                    <div class="hero-score-box">
+                        <div class="progress-ring-container">
+                            <svg class="progress-ring" width="80" height="80" viewBox="0 0 80 80">
+                                <circle class="progress-ring-bg" cx="40" cy="40" r="32" stroke-width="6" fill="transparent" />
+                                <circle class="progress-ring-circle" id="progressRingCircle" cx="40" cy="40" r="32" stroke-width="6" fill="transparent" />
                             </svg>
+                            <div class="progress-text-box">
+                                <span class="progress-percentage" id="progressPercentage">0%</span>
+                                <span class="progress-label">RATING</span>
+                            </div>
+                        </div>
+                        <div class="score-grade-box">
+                            <span class="grade-title">Productivity</span>
+                            <span class="grade-value" id="productivityGrade">A+</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- KPI Metrics Bar -->
+                <section class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon cyan">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-label">Total Focus Tasks</span>
+                            <span class="metric-value" id="metricTotal">0</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon yellow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-label">Pending</span>
+                            <span class="metric-value yellow" id="metricPending">0</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon red">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-label">High Priority</span>
+                            <span class="metric-value red" id="metricHigh">0</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon green">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-label">Completion Rate</span>
+                            <span class="metric-value green" id="metricRate">0%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Task Creation Executive Suite -->
+                <section class="task-creation-panel">
+                    <form id="taskForm" class="creation-form">
+                        <div class="form-main-row">
+                            <div class="input-field-container">
+                                <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                                <input type="text" id="taskInput" placeholder="Add a new executive task or deliverable..." autocomplete="off" maxlength="140" required>
+                            </div>
+                            <button type="submit" class="add-btn" id="addBtn">
+                                <span>Add Task</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Category & Priority Controls Grid -->
+                        <div class="form-options-row">
+                            <!-- Category Select -->
+                            <div class="option-group">
+                                <span class="option-label">Category:</span>
+                                <div class="category-chips">
+                                    <label class="category-chip work">
+                                        <input type="radio" name="categoryOption" value="work" checked>
+                                        <span>💼 Work</span>
+                                    </label>
+                                    <label class="category-chip personal">
+                                        <input type="radio" name="categoryOption" value="personal">
+                                        <span>👤 Personal</span>
+                                    </label>
+                                    <label class="category-chip urgent">
+                                        <input type="radio" name="categoryOption" value="urgent">
+                                        <span>⚡ Urgent</span>
+                                    </label>
+                                    <label class="category-chip project">
+                                        <input type="radio" name="categoryOption" value="project">
+                                        <span>🚀 Project</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Priority Select -->
+                            <div class="option-group">
+                                <span class="option-label">Priority:</span>
+                                <div class="priority-chips">
+                                    <label class="priority-chip priority-low">
+                                        <input type="radio" name="priorityOption" value="low">
+                                        <span>Low</span>
+                                    </label>
+                                    <label class="priority-chip priority-medium">
+                                        <input type="radio" name="priorityOption" value="medium" checked>
+                                        <span>Medium</span>
+                                    </label>
+                                    <label class="priority-chip priority-high">
+                                        <input type="radio" name="priorityOption" value="high">
+                                        <span>High 🔥</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Search, Filter Toolbar & View Mode Switcher -->
+                <section class="toolbar-section">
+                    <div class="toolbar-top">
+                        <!-- Search Field -->
+                        <div class="search-wrapper">
+                            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInput" placeholder="Search tasks by keyword..." autocomplete="off">
+                            <button class="clear-search-btn hidden" id="clearSearchBtn" title="Clear search">×</button>
+                        </div>
+
+                        <!-- Sort & View Mode Toggles -->
+                        <div class="toolbar-actions">
+                            <!-- View Mode Switcher -->
+                            <div class="view-mode-toggle" title="Switch layout view">
+                                <button class="view-btn active" data-view="grid" title="3D Grid View">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                </button>
+                                <button class="view-btn" data-view="list" title="Compact List View">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                                </button>
+                            </div>
+
+                            <!-- Sort Select -->
+                            <div class="sort-wrapper">
+                                <select id="sortSelect" class="sort-select">
+                                    <option value="date-desc">Newest First</option>
+                                    <option value="date-asc">Oldest First</option>
+                                    <option value="priority">Priority (High $\rightarrow$ Low)</option>
+                                    <option value="alpha">Alphabetical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Pills Filter Bar -->
+                    <div class="category-filter-bar">
+                        <span class="filter-label">Filter:</span>
+                        <div class="category-filter-pills">
+                            <button class="cat-pill active" data-cat-filter="all">All</button>
+                            <button class="cat-pill" data-cat-filter="work">💼 Work</button>
+                            <button class="cat-pill" data-cat-filter="personal">👤 Personal</button>
+                            <button class="cat-pill" data-cat-filter="urgent">⚡ Urgent</button>
+                            <button class="cat-pill" data-cat-filter="project">🚀 Project</button>
+                        </div>
+                        <button class="clear-btn" id="clearCompletedBtn" title="Clear all completed tasks">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span>Clear Done</span>
                         </button>
                     </div>
+                </section>
 
-                    <!-- Priority Selector Chips -->
-                    <div class="priority-selector-row">
-                        <span class="priority-selector-label">Priority:</span>
-                        <div class="priority-chips">
-                            <label class="priority-chip priority-low">
-                                <input type="radio" name="priorityOption" value="low" checked>
-                                <span>Low</span>
-                            </label>
-                            <label class="priority-chip priority-medium">
-                                <input type="radio" name="priorityOption" value="medium">
-                                <span>Medium</span>
-                            </label>
-                            <label class="priority-chip priority-high">
-                                <input type="radio" name="priorityOption" value="high">
-                                <span>High 🔥</span>
-                            </label>
+                <!-- Task Cards Grid/List Container -->
+                <section class="task-display-area">
+                    <ul class="task-list grid-view" id="taskList">
+                        <!-- Dynamic Task Cards -->
+                    </ul>
+
+                    <!-- Empty State Box -->
+                    <div class="empty-state hidden" id="emptyState">
+                        <div class="empty-illustration">
+                            <div class="illustration-ring"></div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
                         </div>
+                        <h3 class="empty-title" id="emptyTitle">All tasks completed!</h3>
+                        <p class="empty-subtitle" id="emptySubtitle">You have no tasks pending in this view. Add a task above to stay productive!</p>
                     </div>
-                </form>
-            </section>
+                </section>
 
-            <!-- Search, Filter & Sort Controls -->
-            <section class="controls-section">
-                <div class="search-sort-row">
-                    <!-- Search Bar -->
-                    <div class="search-wrapper">
-                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="text" id="searchInput" placeholder="Search tasks..." autocomplete="off">
-                        <button class="clear-search-btn hidden" id="clearSearchBtn" title="Clear search">×</button>
-                    </div>
-
-                    <!-- Sort Dropdown -->
-                    <div class="sort-wrapper">
-                        <label for="sortSelect">Sort:</label>
-                        <select id="sortSelect" class="sort-select">
-                            <option value="date-desc">Newest First</option>
-                            <option value="date-asc">Oldest First</option>
-                            <option value="priority">Priority (High $\rightarrow$ Low)</option>
-                            <option value="alpha">Alphabetical</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Status Filter Tabs & Actions -->
-                <div class="filter-actions-row">
-                    <div class="filter-tabs">
-                        <button class="filter-btn active" data-filter="all">All <span class="badge" id="countAll">0</span></button>
-                        <button class="filter-btn" data-filter="active">Active <span class="badge" id="countActive">0</span></button>
-                        <button class="filter-btn" data-filter="completed">Done <span class="badge" id="countCompleted">0</span></button>
-                        <button class="filter-btn" data-filter="high">High 🔥 <span class="badge" id="countHighFilter">0</span></button>
-                    </div>
-                    <button class="clear-btn" id="clearCompletedBtn" title="Clear all completed tasks">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                        <span>Clear Done</span>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Task List & Empty State Container -->
-            <section class="task-list-container">
-                <ul class="task-list" id="taskList">
-                    <!-- Dynamic Task Cards Rendered Here -->
-                </ul>
-
-                <!-- Empty State Illustration -->
-                <div class="empty-state hidden" id="emptyState">
-                    <div class="empty-illustration">
-                        <div class="illustration-ring"></div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                    </div>
-                    <h3 class="empty-title" id="emptyTitle">All tasks completed!</h3>
-                    <p class="empty-subtitle" id="emptySubtitle">You have no tasks pending right now. Add a task above to stay productive!</p>
-                </div>
-            </section>
-
-            <!-- Footer Info -->
-            <footer class="card-footer">
-                <span class="footer-stats" id="taskStatsSummary">0 tasks remaining</span>
-                <span class="footer-hint">Double-click or click Edit to modify inline</span>
-            </footer>
-        </div>
-    </main>
+                <!-- Footer Summary -->
+                <footer class="card-footer">
+                    <span class="footer-stats" id="taskStatsSummary">0 focus tasks remaining</span>
+                    <span class="footer-hint">Pro Tip: Click edit icon or double-click to edit inline</span>
+                </footer>
+            </div>
+        </main>
+    </div>
 
     <!-- Undo Deletion Toast Notification -->
     <div class="toast" id="undoToast" role="status">
